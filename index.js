@@ -13,6 +13,13 @@ app.get("/:name", (req, res) => {
     return res.send(`<h1>Hello, ${uname}</h1>`);
 });
 
+app.get("/github/:username", (req, res) => {
+    const userInfo = fetch(
+        `https://api.github.com/users/${req.params.username}`
+    );
+    return res.json(userInfo);
+});
+
 app.listen(PORT, () => {
     return console.log(`Server is running on PORT:${PORT}`);
 });
