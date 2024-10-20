@@ -13,11 +13,17 @@ app.get("/:name", (req, res) => {
     return res.send(`<h1>Hello, ${uname}</h1>`);
 });
 
-app.get("/github/:username", (req, res) => {
-    const userInfo = fetch(
-        `https://api.github.com/users/${req.params.username}`
-    );
-    return res.json(userInfo);
+app.get("/github/:username", async (req, res) => {
+    try {
+        const response = await fetch(`https://api.github.com/users/${req.params.username}`);
+        if (!response.ok) {
+            return res.status(response.status).json({ error: "User not found" });
+        }
+        const userInfo = await response.json();
+        return res.json(userInfo);
+    } catch (error) {
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
 });
 
 app.listen(PORT, () => {
